@@ -1,11 +1,18 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import { connectDB } from './config/db.js';
+import authRoutes from './routes/auth.routes.js';
+import taskRoutes from './routes/task.routes.js';
 
-dotenv.config();
-const app = express(), PORT = process.env.PORT || 4200;;
+dotenv.config(); // Загружаем переменные из .env
+const app = express();
+app.use(express.json()); // Для работы с JSON в теле запроса
 
-app.use(express.json());
-app.use('/api/test', (reqest, response) => {
-    response.json({ message: 'success' }).status(200);
-})
-app.listen(PORT, () => { console.log('Server is running on port ' + PORT); })
+app.use('/api/auth', authRoutes); // Роуты
+app.use('/api/tasks', taskRoutes);
+
+const PORT = process.env.PORT || 4200;
+connectDB(process.env.DB_URL); // Подключение к базе и запуск сервера
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
