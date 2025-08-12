@@ -20,9 +20,9 @@ export const register = async (request, response) => {
     }
 };
 // Логин пользователя. Проверяет email и пароль, возвращает JWT токен.
-export const login = async (requset, response) => {
+export const login = async (request, response) => {
     try {
-        const { email, password } = requset.body;
+        const { email, password } = request.body;
         // Проверяем, есть ли такой пользователь
         const user = await User.findOne({ email });
         if (!user) return response.status(400).json({ message: 'User not found' });
@@ -35,8 +35,8 @@ export const login = async (requset, response) => {
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
-        res.json({ token });
+        response.json({ token });
     } catch (error) {
-        res.status(500).json({ message: 'Login error' });
+        response.status(500).json({ message: 'Login error' });
     }
 };
